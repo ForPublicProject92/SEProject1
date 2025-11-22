@@ -1,0 +1,15 @@
+start -> select
+
+select -> login, signup
+
+login -> main, select
+
+signup -> login, select
+
+main -> configuration, calendar
+
+configuration -> main
+
+calendar -> main, record
+
+record - > calendar
