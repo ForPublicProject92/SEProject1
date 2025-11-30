@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         '/start': (_) => const StartPage(),
         '/login': (_) => const LoginPage(),
         '/signup': (_) => const SignupPage(),
-        '/main': (_) => MainPage(),
+        '/main': (_) => HomePage(),
         '/calendar': (_) => CalendarPage(),
         '/record': (_) => RecordPage(),
         '/configuration': (_) => ConfigurationPage(),

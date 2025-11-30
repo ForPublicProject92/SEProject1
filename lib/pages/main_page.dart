@@ -1,43 +1,118 @@
+import '../src/today_question_dialog.dart';
+import '../src/weather/weather_api.dart';
+import '../src/weather/weather_function.dart';
 import 'package:flutter/material.dart';
-import 'calendar.dart';
+import '../widgets/lilac_character.dart';
 
-// MainPage: 로그인/회원가입 이후 메인 페이지
-// /calendar 버튼은 슬라이드 애니메이션으로 이동
-// /configuration 버튼은 일반 push
-class MainPage extends StatelessWidget {
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Main')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Slide 전환 버튼
-            ElevatedButton(
+      appBar: AppBar(
+        title: Text("라일락"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              // 기존: Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context, '/configuration');  
+            },
+          )
+        ],
+      ),
+      body: Stack(
+        children: [
+          /// -------------------------
+          /// 1) 창문(날씨 자리)
+          /// -------------------------
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              margin: EdgeInsets.only(top: 20),
+              width: 200,
+              height: 150,
+              child: Center(
+                child: FutureBuilder<String>(
+                  future: fetchWeather(),
+                  builder: (context, snap) {
+                    if (snap.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator(strokeWidth: 2);
+                    }
+                    if (snap.hasError) {
+                      return Text("날씨 로드 실패");
+                    }
+
+                    final data = snap.data ?? '';
+                    final parts = data.split('-');
+                    final sky = parts.isNotEmpty ? parts[0] : '';
+                    final pty = parts.length > 1 ? parts[1] : '0';
+
+                    final mapped = WeatherFunction.funcWeather(sky, pty);
+
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        mapped['icon'] as Widget,
+                        SizedBox(height: 6),
+                        Text(
+                          "현재 날씨 - ${mapped['description']}",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+
+          /// -------------------------
+          /// 2) 캐릭터 자리
+          /// -------------------------
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LilacCharacter(
+                  answeredDaysCount: 7, // integer 값(임시)
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+
+          /// -------------------------
+          /// 3) 달력 버튼
+          /// -------------------------
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: FloatingActionButton.extended(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => CalendarPage(),
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      const begin = Offset(1.0, 0.0); // 오른쪽에서 왼쪽
-                      const end = Offset.zero;
-                      final tween = Tween(begin: begin, end: end);
-                      return SlideTransition(position: animation.drive(tween), child: child);
-                    },
-                  ),
-                );
+                Navigator.pushNamed(context, '/calendar');
               },
-              child: Text('Go to Calendar (Slide)'),
+              icon: Icon(Icons.calendar_month),
+              label: Text("달력"),
             ),
-            // 일반 push
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/configuration'),
-              child: Text('Go to Configuration'),
+          ),
+
+          /// -------------------------
+          /// 4) 말풍선 버튼 (오늘의 질문)
+          /// -------------------------
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                TodayQuestionDialog.show(context);
+              },
+              child: Icon(Icons.chat_bubble),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

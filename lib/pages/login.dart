@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../src/auth/local_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,19 +15,17 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> login() async {
     try {
-      // 로그인 요청 → JWT + id 받아옴
+      // 로그인 요청
       final res = await ApiService.post("/auth/login", {
-        "id": idCtrl.text,
-        "password": pwCtrl.text,
+        "id": idCtrl.text.trim(),
+        "password": pwCtrl.text.trim(),
       });
 
-      // JWT 저장
-      await ApiService.storage.write(key: "token", value: res["token"]);
+      // 토큰 저장 (자동로그인용)
+      await LocalAuthStorage.saveToken(res["token"]);
+      await LocalAuthStorage.saveUserId(res["id"]);
 
-      // 유저 ID 저장
-      await ApiService.storage.write(key: "userId", value: res["id"]);
-
-      // 메인 페이지로 이동
+      // 메인 페이지 이동
       Navigator.pushReplacementNamed(
         context,
         '/main',
@@ -61,8 +60,8 @@ class _LoginPageState extends State<LoginPage> {
               child: const Text("로그인"),
             ),
             TextButton(
-              child: const Text("회원가입"),
               onPressed: () => Navigator.pushNamed(context, "/signup"),
+              child: const Text("회원가입"),
             )
           ],
         ),
