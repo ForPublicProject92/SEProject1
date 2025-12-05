@@ -1,16 +1,9 @@
 # bsap
 
-A new Flutter project.
+서버를 작동시킬려면 아래 프로그램이 꼭 필요합니다. <br>
 
-## Getting Started
+Node.JS<br>
+https://nodejs.org/ko/download<br><br>
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+MongoDB Community Server<br>
+https://www.mongodb.com/try/download/community<br>
