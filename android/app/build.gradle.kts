@@ -5,18 +5,30 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Use Kotlin JVM toolchain to target Java 21
+kotlin {
+    jvmToolchain(21)
+}
+
+// Use Java toolchain to ensure Gradle/JDK 21 usage
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 android {
     namespace = "com.example.bsap"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.toVersion(21)
+        targetCompatibility = JavaVersion.toVersion(21)
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "21"
     }
 
     defaultConfig {

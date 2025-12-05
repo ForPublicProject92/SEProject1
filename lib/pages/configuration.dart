@@ -4,6 +4,8 @@ import '../src/auth/local_storage.dart';
 // ConfigurationPage: 설정 페이지
 // /main으로 이동
 class ConfigurationPage extends StatelessWidget {
+  const ConfigurationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

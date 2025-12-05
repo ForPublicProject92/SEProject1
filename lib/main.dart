@@ -6,6 +6,7 @@ import 'pages/main_page.dart';
 import 'pages/calendar.dart';
 import 'pages/record.dart';
 import 'pages/configuration.dart';
+import 'pages/server_error.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/calendar': (_) => CalendarPage(),
         '/record': (_) => RecordPage(),
         '/configuration': (_) => ConfigurationPage(),
+        '/serverError': (_) => const ServerErrorPage()
       },
     );
   }

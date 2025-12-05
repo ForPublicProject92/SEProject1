@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../src/auth/local_storage.dart';
+import '../services/api_service.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -12,26 +12,33 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
-    checkLogin();
+    initProcess();
   }
-  
-  void checkLogin() async {
-    final token = await LocalAuthStorage.getToken();
 
-    if (token != null && token.isNotEmpty) {
+  Future<void> initProcess() async {
+    // 1) 서버 상태 체크
+    final serverOK = await ApiService.checkServer();
+    if (!serverOK) {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/serverError');
+      return;
+    }
+
+    // 2) 토큰 검증
+    final validToken = await ApiService.verifyStoredToken();
+    if (!mounted) return;
+
+    if (validToken) {
       Navigator.pushReplacementNamed(context, '/main');
     } else {
       Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }

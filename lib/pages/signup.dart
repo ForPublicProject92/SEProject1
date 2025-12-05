@@ -16,16 +16,24 @@ class _SignupPageState extends State<SignupPage> {
 
   Future<void> signup() async {
     try {
-      await ApiService.post("/auth/signup", {
-        "id": idCtrl.text,
-        "password": pwCtrl.text,
-        "name": nameCtrl.text,
-        "phone": phoneCtrl.text,
-      });
+      await ApiService.post(
+        context,                     
+        "/api/auth/signup",              // endpoint
+        {
+          "id": idCtrl.text,
+          "password": pwCtrl.text,
+          "name": nameCtrl.text,
+          "phone": phoneCtrl.text,
+        },
+      );
+
       Navigator.pop(context);
-    } catch (e) {
+
+    } 
+    catch (e) {
+      print("회원가입 오류: $e");   // 콘솔 출력
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("회원가입 실패")));
+          .showSnackBar(SnackBar(content: Text("회원가입 실패: $e")));
     }
   }
 

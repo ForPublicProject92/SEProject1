@@ -14,28 +14,35 @@ class _LoginPageState extends State<LoginPage> {
   final pwCtrl = TextEditingController();
 
   Future<void> login() async {
-    try {
-      // 로그인 요청
-      final res = await ApiService.post("/auth/login", {
+  try {
+    final res = await ApiService.post(
+      context,
+      "/api/auth/login",
+      {
         "id": idCtrl.text.trim(),
         "password": pwCtrl.text.trim(),
-      });
+      },
+    );
 
-      // 토큰 저장 (자동로그인용)
-      await LocalAuthStorage.saveToken(res["token"]);
-      await LocalAuthStorage.saveUserId(res["id"]);
+    await LocalAuthStorage.saveToken(res["token"]);
+    await LocalAuthStorage.saveUserId(res["id"]);
 
-      // 메인 페이지 이동
-      Navigator.pushReplacementNamed(
-        context,
-        '/main',
-        arguments: res["id"],
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("로그인 실패")));
-    }
+    // 화면이 살아있는지 확인
+    if (!mounted) return;
+
+    Navigator.pushReplacementNamed(
+      context,
+      '/main',
+      arguments: res["id"],
+    );
+
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text("로그인 실패")));
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
             TextButton(
               onPressed: () => Navigator.pushNamed(context, "/signup"),
               child: const Text("회원가입"),
-            )
+            ),
           ],
         ),
       ),
