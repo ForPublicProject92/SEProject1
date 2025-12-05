@@ -2,9 +2,6 @@
 import express from "express";
 import cors from "cors";
 import { connectMongo } from "./config/mongo.js";
-
-// ★ dotenv 제거, 랜덤키도 제거
-// ★ 직접 키를 정의한 config 파일 import
 import { SECRET_KEY } from "./config/secret.js";
 
 const app = express();
@@ -15,9 +12,10 @@ app.use(cors());
 connectMongo();
 
 // 라우트 import
-import authRoute from "./routes/auth.js";
+import authRouter from "./routes/auth.js";
 import infoRoute from "./routes/info.js";
 import logRoute from "./routes/log.js";
+import familyRoute from "./routes/family.js";
 import todayQuestionRoute from "./routes/todayQuestion.js";
 
 // 서버 확인
@@ -26,7 +24,7 @@ app.get("/api/health", (req, res) => {
 });
 
 // 인증 불필요
-app.use("/api/auth", authRoute);
+app.use("/api/auth", authRouter);
 
 // 인증 필요 라우트
 import { verifyToken } from "./middleware/auth.js";
@@ -34,6 +32,8 @@ app.use("/api/info", verifyToken, infoRoute);
 app.use("/api/log", verifyToken, logRoute);
 
 app.use("/api/question", verifyToken, todayQuestionRoute);
+
+app.use("/api/family", verifyToken, familyRoute);
 
 app.listen(2803, () => {
   console.log("API server running on port 2803");

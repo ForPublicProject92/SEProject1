@@ -1,28 +1,74 @@
+//configuration.dart
 import 'package:flutter/material.dart';
 import '../src/auth/local_storage.dart';
 
-// ConfigurationPage: 설정 페이지
-// /main으로 이동
 class ConfigurationPage extends StatelessWidget {
   const ConfigurationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Configuration')),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      appBar: AppBar(
+        title: const Text('설정'),
+        backgroundColor: const Color(0xFFB695C0),
+      ),
+
+      body: ListView(
+        padding: const EdgeInsets.all(20),
         children: [
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/main'),
-            child: Text('Back to Main'),
+
+          // --------------------------
+          // 마이페이지
+          // --------------------------
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text("마이페이지"),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              Navigator.pushNamed(context, "/mypage");
+            },
           ),
+
+          const Divider(),
+
+          // --------------------------
+          // 가족 정보
+          // --------------------------
+          ListTile(
+            leading: const Icon(Icons.family_restroom),
+            title: const Text("가족 정보"),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              Navigator.pushNamed(context, "/family");
+            },
+          ),
+
+          const Divider(),
+          // --------------------------
+          // 앱 정보
+          // --------------------------
+          ListTile(
+            leading: const Icon(Icons.info),
+            title: const Text("앱 정보"),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              Navigator.pushNamed(context, "/about");
+            },
+          ),
+
+          const Divider(),
+          const SizedBox(height: 20),
+
+          // --------------------------
+          // 로그아웃
+          // --------------------------
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+            ),
             onPressed: () async {
-              // 저장된 토큰 & 사용자 정보 삭제
               await LocalAuthStorage.clear();
 
-              // 로그인 화면으로 이동 + 모든 페이지 스택 삭제
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 '/login',
@@ -30,7 +76,7 @@ class ConfigurationPage extends StatelessWidget {
               );
             },
             child: const Text("로그아웃"),
-          )
+          ),
         ],
       ),
     );

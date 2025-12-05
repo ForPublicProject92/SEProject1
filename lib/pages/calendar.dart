@@ -46,12 +46,14 @@ class _CalendarPageState extends State<CalendarPage> {
   List<MemberAnswer> groupAnswers = [];
 
   @override
-  void initState() {
-    super.initState();
-    initializeCalendarLocale();
-    _selectedDay = _focusedDay;
-    _loadDayData(_selectedDay!); // 처음 로드시 오늘 날짜 데이터 불러오기
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  initializeCalendarLocale();   
+
+  if (_selectedDay != null) {
+    _loadDayData(_selectedDay!);
   }
+}
 
   // 날짜 포맷 YYYY-MM-DD 변환
   String formatDate(DateTime d) =>

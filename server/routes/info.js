@@ -22,4 +22,25 @@ router.get("/me", verifyToken, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/info/update
+ * → 사용자 정보 수정 (이름/전화번호)
+ */
+router.post("/update", verifyToken, async (req, res) => {
+  try {
+    const id = req.user.id;
+    const { name, phone } = req.body;
+
+    const updated = await UserInfo.findByIdAndUpdate(
+      id,
+      { name, phone },
+      { new: true }
+    );
+
+    res.json({ msg: "update_ok", user: updated });
+  } catch (e) {
+    res.status(500).json({ msg: "Server error", error: e.message });
+  }
+});
+
 export default router;

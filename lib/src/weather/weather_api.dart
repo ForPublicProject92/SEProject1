@@ -14,7 +14,7 @@ Future<String> fetchWeather({int nx = 67, int ny = 101}) async {
   // API key는 밑 주석에서 발급받아서 하드코딩하여 사용하시면 됩니다.
   // https://www.data.go.kr/data/15084084/openapi.do
   if (key.isEmpty) {
-    key = 'api키 입력';
+    key = 'api;
   }
 
   final now = DateTime.now();
@@ -28,7 +28,7 @@ Future<String> fetchWeather({int nx = 67, int ny = 101}) async {
   }
   final baseTime = '${_pad2(baseHour)}00';
 
-  final uri = Uri.http(
+  final uri = Uri.https(
     'apis.data.go.kr',
     '/1360000/VilageFcstInfoService_2.0/getVilageFcst',
     {
